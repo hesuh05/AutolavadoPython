@@ -38,6 +38,12 @@ def health_check():
 def get_users():
     return db
 
+@app.post("/api/v1/users")
+def create_user(user:Usuario):
+    userObject = {**user.dict(),"id":uuid4()}
+    db.append(userObject)
+    return {"message":"User created sucessfully","data":user}
+
 @app.get("/api/v1/users/{user_id}")
 def get_user(user_id:int):
     if user_id > len(db):
@@ -46,6 +52,11 @@ def get_user(user_id:int):
 
 @app.delete("/api/v1/users/{user_id}")
 def delete_user(user_id:int):
+    result = userExists(db,user_id)
+    if(result[0]):
+        del db[user_id]
+        return {"message":"User deleted sucessfully!","data":}
+    
     if(len(db)>user_id):
         user_deleted = db[user_id]
         del db[user_id]

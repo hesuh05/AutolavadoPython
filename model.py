@@ -11,6 +11,7 @@ class Genero(str,Enum):
 class Role(str,Enum):
     admin = "admin"
     user = "user"
+
 class Usuario(BaseModel):
     id: Optional[UUID] = uuid4()
     primerNombre:str
