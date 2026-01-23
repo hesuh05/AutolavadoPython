@@ -34,17 +34,15 @@ app = FastAPI()
 def health_check():
     return {"status":"Active!"}
 
-@app.get("/items/item/{item_id}")
-def read_item(item_id:int, q: Union[int,str]=None):
-    return {"item":items[item_id],"query":q}
-
 @app.get("/api/v1/users")
-def get_users(user_id:int):
+def get_users():
     return db
 
 @app.get("/api/v1/users/{user_id}")
 def get_user(user_id:int):
-    return db[user_id]
+    if user_id > len(db):
+        return db[user_id]
+    return {"message":"User not found"}
 
 @app.delete("/api/v1/users/{user_id}")
 def delete_user(user_id:int):
@@ -55,5 +53,11 @@ def delete_user(user_id:int):
     return {"message":"User not found!"}
 
 @app.put("/api/v1/users/{user_id}")
-def update_user(user_id,Usuario):
-    return {}
+def update_user(user_id: int,usuario: Usuario):
+    if user_id < len(db):
+        db[user_id] = usuario
+        return{
+            "message":"User updated sucessfully",
+            "data":usuario
+        }
+    return {"message":"User not found"}
